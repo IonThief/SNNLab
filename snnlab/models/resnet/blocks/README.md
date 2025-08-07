@@ -1,5 +1,8 @@
 ## ResNet
 
+#### ResBlock
+![BasicBlock Architecture](/.assets/ResBlock.svg)
+
 #### Sub Blocks
 ##### BasicBlock
 ###### Architecture
@@ -15,3 +18,4 @@
 ##### ConvBlock
 ###### Architecture
 ![ConvBlock Architecture](/.assets/ConvBlock.svg)
+
