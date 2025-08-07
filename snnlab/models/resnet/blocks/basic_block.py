@@ -1,11 +1,10 @@
 from typing import Annotated
 
 import torch.nn as nn
+from base_block import BaseBlock
 from mmdet3d.registry import TASK_UTILS
 from pydantic import BaseModel, Field
 from spikingjelly.activation_based import layer
-
-from .base_block import BaseBlock
 
 
 class BasicBlockConfig(BaseModel):

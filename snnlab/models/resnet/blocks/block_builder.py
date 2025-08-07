@@ -1,11 +1,10 @@
 import torch
+from basic_block import BasicBlock  # noqa
+from bottle_neck import BottleNeck  # noqa
+from conv_block import ConvBlock  # noqa
 from mmdet3d.registry import TASK_UTILS
 from pydantic import BaseModel, model_validator
 from spikingjelly.clock_driven import neuron
-
-from .basic_block import BasicBlock  # noqa
-from .bottle_neck import BottleNeck  # noqa
-from .conv_block import ConvBlock  # noqa
 
 
 class BlockBuilderConfig(BaseModel):
