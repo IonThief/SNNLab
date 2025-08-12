@@ -25,8 +25,7 @@ class BaseBlock(nn.Module):
     def _build(self):
         """
         Build the block architecture.
-        This method should be implemented by subclasses
-        to define the specific architecture of the block.
+        This method should be implemented by subclasses to define the specific architecture of the block.
         """
         raise NotImplementedError("Build method must be implemented by subclasses.")
 

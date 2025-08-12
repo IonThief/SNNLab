@@ -1,16 +1,17 @@
 from typing import Annotated
 
 import torch
-from block_builder import BlockBuilder
 from pydantic import BaseModel, Field
 from spikingjelly.clock_driven import neuron
 from torch import nn
+
+from .block_builder import BlockBuilder
 
 
 class ResBlockConfig(BaseModel):
     sub_block_cfg: Annotated[
         dict,
-        Field(description="It should follow MMLab Convention"),
+        Field(description="it should follow MMLab Convention"),
     ] = dict(
         type="BasicBlock",
         cfg=dict(
@@ -21,7 +22,7 @@ class ResBlockConfig(BaseModel):
     )
     skip_block_cfg: Annotated[
         dict,
-        Field(description="It should follow MMLab Convention"),
+        Field(description="it should follow MMLab Convention"),
     ] = dict(
         type="identity",
     )
@@ -75,7 +76,7 @@ class ResBlock(nn.Module):
     def _build(self):
         builder = BlockBuilder(
             cfg=dict(
-                activation_model=self.activation_model,  # WARN: NOT USED though
+                activation_model=self.activation_model,
             ),
             step_mode=self.step_mode,
             device=self.device,
@@ -103,85 +104,3 @@ class ResBlock(nn.Module):
             else neuron.ParametricLIFNode
         )
         return spiking_neuron_model
-
-
-if __name__ == "__main__":
-    import os
-
-    OUTPUT_DIR = ".RENDERED_MODELS_AS_GRAPH"
-    os.makedirs(OUTPUT_DIR, exist_ok=True)
-
-    def export_model_architecture_svg(model, input_size):
-        from torchview import draw_graph
-
-        draw_graph(
-            model,
-            input_size=input_size,
-            depth=1,
-            expand_nested=True,
-            graph_dir="TB",
-        ).visual_graph.render(
-            filename=f"{model.__class__.__name__}",
-            directory=OUTPUT_DIR,
-            format="svg",
-            cleanup=True,
-        )
-        print(f":: Model {model.__class__.__name__} graph is saved at {OUTPUT_DIR}")
-
-    # Example usage
-    # model = ResBlock(
-    #     cfg=dict(
-    #         sub_block_cfg=dict(
-    #             type="BasicBlock",
-    #             cfg=dict(
-    #                 in_channels=64,
-    #                 out_channels=64,
-    #                 stride=1,
-    #             ),
-    #         ),
-    #         skip_block_cfg=dict(
-    #             type="ConvBlock",
-    #             cfg=dict(
-    #                 in_channels=64,
-    #                 out_channels=64,
-    #             ),
-    #         ),
-    #     ),
-    #     step_mode="m",
-    #     device=torch.device("cuda" if torch.cuda.is_available() else "cpu"),
-    # )
-
-    model = ResBlock(
-        cfg=dict(
-            sub_block_cfg=dict(
-                type="BottleNeck",
-                cfg=dict(
-                    in_channels=64,
-                    mid_channels=16,
-                    stride=1,
-                    dilation=1,
-                    groups=1,
-                    base_width=64,
-                ),
-            ),
-            # skip_block_cfg=dict(
-            #     type="ConvBlock",
-            #     cfg=dict(
-            #         in_channels=64,
-            #         out_channels=64,
-            #     ),
-            # ),
-        ),
-        step_mode="m",
-        device=torch.device("cuda" if torch.cuda.is_available() else "cpu"),
-    )
-
-    print(model)
-    input_size = (
-        1,
-        1,
-        64,
-        224,
-        224,
-    )  # Example input size: (batch_size, channels, height, width)
-    export_model_architecture_svg(model, input_size)

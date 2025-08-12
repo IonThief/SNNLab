@@ -1,10 +1,11 @@
 import torch
-from basic_block import BasicBlock  # noqa
-from bottle_neck import BottleNeck  # noqa
-from conv_block import ConvBlock  # noqa
 from mmdet3d.registry import TASK_UTILS
 from pydantic import BaseModel, model_validator
 from spikingjelly.clock_driven import neuron
+
+from .basic_block import BasicBlock  # noqa
+from .bottle_neck import BottleNeck  # noqa
+from .conv_block import ConvBlock  # noqa
 
 
 class BlockBuilderConfig(BaseModel):
@@ -14,10 +15,10 @@ class BlockBuilderConfig(BaseModel):
     # ---- Post-Validation ------------------------------------------------------------
     @model_validator(mode="after")
     def sanity_check(self):
-        neuron_name = self.activation_model.__name__
-        if not hasattr(neuron, neuron_name):
+        model_name = self.activation_model.__name__
+        if not hasattr(neuron, model_name):
             raise ValueError(
-                f"activation_model ({neuron_name}) must be"
+                f"activation_model ({model_name}) must be"
                 f" one of the neuron attributes in spikingjelly.clock_driven.neuron"
             )
         return self

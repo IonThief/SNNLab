@@ -1,7 +1,7 @@
 from typing import Annotated
 
+import torch
 import torch.nn as nn
-from base_block import BaseBlock
 from mmdet3d.registry import TASK_UTILS
 from pydantic import BaseModel, Field
 from spikingjelly.activation_based import layer
@@ -14,18 +14,29 @@ class ConvBlockConfig(BaseModel):
 
 
 @TASK_UTILS.register_module()
-class ConvBlock(BaseBlock):
+class ConvBlock(nn.Module):
     def __init__(self, cfg=None, step_mode=None, device=None):
         self.cfg = ConvBlockConfig(**cfg) if cfg else ConvBlockConfig()
-        super().__init__(step_mode=step_mode, device=device)
+        super().__init__()
+        self._init(cfg, step_mode, device)
         self._build()
+
+    def _init(self, cfg, step_mode, device):
+        # ---- Sanity check -----------------------------------------------------------
+        # TODO:
+        # ---- Spiking Neuron ---------------------------------------------------------
+        self.step_mode = step_mode
+        # ---- Device -----------------------------------------------------------------
+        self.device = device or torch.device(
+            "cuda" if torch.cuda.is_available() else "cpu"
+        )
 
     def _build(self):
         """
         Architecture
         ------------
         ┌────────────────────┐
-        │        Conv        │─┐
+        │      1x1Conv       │─┐
         ├────────────────────┤ │ # downsampling layer
         │ BatchNormalization │─┘
         └────────────────────┘
