@@ -1,44 +1,35 @@
-[project]
-  name = "snnlab"
-  description = "A Spiking Neural Network (SNN) Package with a modular design and configuration system inspired by OpenMMLab."
-
-  authors = [
-    { name="Ibrahim Sayed", email="ibrahim.e.sayed@outlook.com" },
-  ]
-
-  requires-python = ">=3.10"
-  readme =  {file = "README.md" , content-type = "text/markdown"}
-  dynamic = ["version"]
-
-  # TODO: for some reason, detectron2 is installed first, but it requires torch, so torch needs to be installed first
-  # and it seems mim resolves the dependencies versions between mm projects
-  # 1. pip install torch
-  # 2. pip install -U openmim
-  # 3. mim install mmengine
-  # 4. mim install 'mmcv>=2.0.0rc4' # i guess i don't need this, it will be installed by mmdet, and it will be another version -,-
-  # 5. mim install 'mmdet>=3.0.0'
-  # 6. mim install "mmdet3d>=1.1.0"
-  # TODO: install numpy and matplotlib with specific versions
-  # 7. pip install .
-  # FIXME: need to find a way to decide the order of dependencies installation
-  dependencies = [
-    "lazy_loader",
-    "torch",
-    "torchvision",
-    "pytorch_lightning",
-    "spikingjelly",
-    "numpy",
-    "open3d",
-    "plyfile",
-    "numba",
-    "pydantic",
-    "detectron2 @ git+https://github.com/facebookresearch/detectron2.git",
-  ]
-
 [build-system]
   requires = ["hatchling"]
   build-backend = "hatchling.build"
 
+[project]
+  authors = [
+    { name="Ibrahim Sayed", email="ibrahim.e.sayed@outlook.com" },
+  ]
+
+  name = "snnlab"
+  description = """ A Spiking Neural Network (SNN) Package with a modular design
+                and configuration system inspired by OpenMMLab.
+                It provides a flexible framework for building and training SNNs,
+                """
+
+  requires-python = ">=3.10"
+  version = "0.0.1"
+  readme =  {file = "README.md" , content-type = "text/markdown"}
+
+  dependencies = [
+    "spikingjelly",
+    "pydantic",
+    "numpy<2.0.0",
+    "matplotlib",
+    "torchview",
+    "lazy_loader",
+    "torchvision",
+    "open3d",
+    "plyfile",
+    "numba",
+    "detectron2 @ git+https://github.com/facebookresearch/detectron2.git",
+  ]
+
 [tool.hatch]
   metadata.allow-direct-references = true
-  version.path = "snnlab/__version__.py"
