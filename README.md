@@ -19,7 +19,7 @@ pip install -U torch openmim
 ```
 
 ```bash
-mim install mmengine "mmdet>=3.0.0" "mmdet3d>=1.1.0" "2.2.0>mmcv>=2.0.0rc4"
+mim install mmengine "mmdet>=3.0.0" "mmdet3d>=1.1.0" "mmcv>=2.0.0rc4, <2.2.0"
 ```
 
 _Install SNNLab_
